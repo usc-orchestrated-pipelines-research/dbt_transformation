@@ -4,7 +4,7 @@ models:
   - name: project_fact_final
     description: >
       Monthly project fact table capturing project performance metrics and dimensional relationships.
-      Each record represents one project–month snapshot for a project, based on last_update month.
+      Each record represents one project_month snapshot for a project, based on last_update month.
 
     columns:
       # ===== 核心主键 =====

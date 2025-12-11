@@ -1,0 +1,146 @@
+version: 2
+
+models:
+  - name: deliverable_dim
+    description: "Dimension table for deliverables"
+    columns:
+      - name: deliverable_key
+        description: "Surrogate key for the deliverable SCD record"
+        tests:
+          - unique
+          - not_null
+
+      - name: deliverableid
+        description: "Natural deliverable ID"
+        tests:
+          - not_null
+
+      - name: projectid
+        description: "Project ID associated with the deliverable"
+
+      - name: name
+        description: "Deliverable name"
+        tests:
+          - not_null
+
+      - name: projectname
+        description: 'Project name'
+
+      - name: projecttype
+        description: 'Type of projects'
+        tests:
+          - accepted_values:
+              values: ['Fixed', 'Time and Material']  
+
+      - name: duedate
+        description: "Deliverable due date"
+
+      - name: valid_from
+        description: "Effective start timestamp"
+        tests:
+          - not_null
+
+      - name: valid_to
+        description: "Effective end timestamp"
+
+
+  - name: hr_client_dim
+    description: "Dimension table for clients"
+    columns:
+      - name: client_key
+        description: "Surrogate key for client SCD record"
+        tests:
+          - unique
+          - not_null
+
+      - name: client_id
+        description: "Natural client ID"
+        tests:
+          - not_null
+
+      - name: client_name
+        description: "Client name"
+        tests:
+          - not_null
+
+      - name: phone_number
+        description: "Client phone number"
+
+      - name: email
+        description: "Client email"
+
+      - name: valid_from
+        description: "Record effective start timestamp"
+        tests:
+          - not_null
+
+      - name: valid_to
+        description: "Record effective end timestamp"
+
+
+  - name: hr_date_dim
+    description: "Date dimension for HR analytics"
+    columns:
+      - name: date
+        description: "Calendar date (primary key)"
+        tests:
+          - unique
+          - not_null
+
+      - name: year
+        description: "Year"
+        tests:
+          - not_null
+
+      - name: quarter
+        description: "Quarter (1–4)"
+        tests:
+          - not_null
+
+      - name: month
+        description: "Month number (1–12)"
+        tests:
+          - not_null
+
+      - name: month_name
+        description: "Month name"
+
+      - name: day_name
+        description: "Weekday name"
+
+      - name: day_of_week
+        description: "Day of week (1–7)"
+
+      - name: week
+        description: "Week number"
+
+      - name: is_weekend
+        description: "Weekend flag"
+
+
+  - name: title_dim
+    description: "Dimension table for consultant titles"
+    columns:
+      - name: title_key
+        description: "Surrogate key for title SCD record"
+        tests:
+          - unique
+          - not_null
+
+      - name: TITLE_ID
+        description: "Natural title ID"
+        tests:
+          - not_null
+
+      - name: title_name
+        description: "Consultant title"
+        tests:
+          - not_null
+
+      - name: valid_from
+        description: "SCD record start timestamp"
+        tests:
+          - not_null
+
+      - name: valid_to
+        description: "SCD record end timestamp"

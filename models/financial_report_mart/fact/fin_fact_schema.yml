@@ -1,0 +1,5 @@
+version: 2
+
+models:
+  - name: financial_report_facts
+    description: "Fact table with financial report metrics"

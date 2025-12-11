@@ -1,0 +1,96 @@
+version: 2
+
+models:
+  # ===================== PROJECT DIM =====================
+  - name: project_dim
+    description: "Dimension table for project details"
+    columns:
+      - name: project_key
+        description: "Surrogate key for project"
+        tests:
+          - not_null        # 高亮要求：Not Null
+          - unique          # 高亮要求：Unique
+
+      - name: project_id
+        description: "Natural key for project"
+        tests:
+          - not_null        # 高亮要求：Not Null
+
+      - name: type
+        description: "Type of project billing"
+        tests:
+          - accepted_values:    # 高亮要求：Accepted values
+              values: ['Fixed', 'Time and Material']
+
+      - name: price    #   description: "Project price"
+        tests:
+          - test_project_price_no_negatives
+
+      - name: planned_start_date   #All dates instead of start and end seperate
+        tests:
+          - test_project_date
+          
+      # - name: planned_start_date
+      #   description: "Project planned start date"
+      #   tests:
+      #     - project_planned_start_not_null    # 👈 自定义 test：必须非空
+          
+      - name: planned_start_date
+        tests:
+          - test_project_planned_start_not_null
+          
+      # - name: planned_end_date
+      #   description: "Project planned end date"
+      #   tests:
+      #     # 自定义 test：end 要么为空，要么必须 >= start
+      #     - project_planned_end_after_start_or_null:
+      #         start_column: planned_start_date
+              
+      - name: planned_end_date
+        tests:
+          - test_project_planned_end_after_start_or_null
+
+
+  # ===================== BUSINESSUNIT DIM =====================
+  - name: businessunit_dim
+    description: "Dimension table for business units"
+    columns:
+      - name: unitkey
+        description: "Surrogate key for business unit"
+        tests:
+          - not_null        # 高亮要求
+          - unique
+
+      - name: unitid
+        description: "Natural business unit id"
+        tests:
+          - not_null        # 高亮要求
+
+      - name: name
+        description: "Business unit name"
+        tests:
+          - not_null        # 文档里是“Name: Not Null??” 按 Not Null 写
+
+
+  # ===================== CLIENT DIM =====================
+  - name: client_dim
+    description: "Dimension table for clients"
+    columns:
+      - name: client_key
+        description: "Surrogate key for client"
+        tests:
+          - not_null        # 高亮要求
+          - unique
+
+      - name: client_id
+        description: "Natural client id"
+        tests:
+          - not_null        # 高亮要求
+
+      - name: client_name
+        description: "Client name"
+        tests:
+          - not_null        # 高亮要求
+
+      # phone / email 格式那两个是 HR mart 那边负责的，如果你们分工明确可以不写；
+      # 如果你想顺手做，也可以再加自定义 regex test（我们现在先按文档分工不写）

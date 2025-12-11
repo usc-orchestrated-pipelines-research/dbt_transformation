@@ -1,0 +1,139 @@
+version: 2
+
+models:
+  - name: project_fact_final
+    description: >
+      Monthly project fact table capturing project performance metrics and dimensional relationships.
+      Each record represents one project–month snapshot for a project, based on last_update month.
+
+    columns:
+      # ===== 核心主键 =====
+      - name: row_key
+        description: "Hash(project_id + snapshot_month) as incremental merge key."
+        tests:
+          - not_null
+          - unique
+
+      # ===== 业务主键 & 维度 surrogate keys =====
+      - name: project_id
+        description: "Natural project identifier."
+        tests:
+          - not_null
+
+      - name: project_key
+        description: "Surrogate key from project_dim."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('project_dim')
+              field: project_key
+
+      - name: client_key
+        description: "Surrogate key from client_dim."
+        tests:
+          - relationships:
+              to: ref('client_dim')
+              field: client_key
+
+      - name: business_unit_key
+        description: "Surrogate key from businessunit_dim."
+        tests:
+          - relationships:
+              to: ref('businessunit_dim')
+              field: unitkey
+
+      - name: date
+        description: "Snapshot month (month truncated from last_update), foreign key to project_date_dim.date."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('project_date_dim')
+              field: date
+
+      - name: actual_start_date_key
+        description: "Date dimension key for actual_start_date."
+        tests:
+          - relationships:
+              to: ref('project_date_dim')
+              field: date
+
+      - name: actual_end_date_key
+        description: "Date dimension key for actual_end_date."
+        tests:
+          - relationships:
+              to: ref('project_date_dim')
+              field: date
+
+      # ===== 状态 & 进度类字段 =====
+      - name: status
+        description: "Project status at the time of snapshot (e.g., Active, Completed, On Hold)."
+
+      - name: percent_complete
+        description: "Project completion percent at snapshot time, expected in [0, 100]."
+        tests:
+          - not_null
+          - between_0_and_100   # 👈 自定义 test（下面会写文件）
+
+      - name: if_late_start_flag
+        description: "1 if actual_start_date > planned_start_date, else 0."
+        tests:
+          - accepted_values:
+              values: [0, 1]
+
+      - name: planned_duration_days
+        description: "Planned duration in days: planned_end_date - planned_start_date."
+        tests:
+          - non_negative       # 👈 自定义 test
+
+      - name: actual_duration_days
+        description: "Actual duration in days: actual_end_date - actual_start_date (nullable)."
+        tests:
+          - non_negative       # 👈 自定义 test
+
+      - name: expected_end_date
+        description: >
+          Expected project end date based on actual_start_date, current_date and percent_complete.
+          Null if cannot be estimated.
+
+      # ===== 工时 & 成本 & 费用 =====
+      - name: hours_spent
+        description: "Total consultant hours for the project in the snapshot month."
+        tests:
+          - non_negative
+
+      - name: project_expenses_per_month
+        description: "Total project expenses in the snapshot month."
+        tests:
+          - non_negative
+
+      - name: consultant_hour_costs_per_month
+        description: "Consultant payroll-based costs in the snapshot month."
+        tests:
+          - non_negative
+
+      - name: total_expenses
+        description: "Sum of project_expenses_per_month and consultant_hour_costs_per_month."
+        tests:
+          - non_negative
+
+      - name: forecasted_cost
+        description: "Forecasted total cost = total_expenses / percent_complete (when > 0)."
+        tests:
+          - non_negative
+
+      # ===== 收入 & 标记字段 =====
+      - name: revenue_received_per_month
+        description: "Revenue received to date (cumulative) as of snapshot month."
+        tests:
+          - non_negative
+
+      - name: potential_problem_project
+        description: >
+          Flag for potentially problematic projects:
+          - schedule slippage (planned_end_date < expected_end_date)
+          - for Fixed: forecasted_cost > price
+          - for T&M: forecasted_cost > estimated_budget
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]

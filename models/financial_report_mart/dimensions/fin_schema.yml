@@ -1,0 +1,7 @@
+version: 2
+
+models:
+  - name: fin_businessunit_dim
+    description: "Business unit dimension"
+  - name: fin_date_dim
+    description: "Date dimension for financial report timeline"

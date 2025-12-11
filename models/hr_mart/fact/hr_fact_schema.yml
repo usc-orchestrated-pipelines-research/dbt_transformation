@@ -1,0 +1,73 @@
+version: 2
+
+models:
+  - name: hr_fact
+    description: "Monthly HR utilization fact table generated from consultant hours, deliverables, business units, clients, and dates."
+    columns:
+
+      - name: HR_record_key
+        description: "Surrogate key for HR fact record."
+        tests:
+          - unique
+          - not_null
+
+      - name: consultant_key
+        description: "Consultant surrogate key."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('consultant_dim')
+              field: consultantkey
+
+      - name: deliverable_key
+        description: "Deliverable surrogate key."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('deliverable_dim')
+              field: deliverable_key
+
+      - name: business_unit_key
+        description: "Business unit surrogate key."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('businessunit_dim')
+              field: unitkey
+
+      - name: client_key
+        description: "Client surrogate key."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hr_client_dim')
+              field: client_key
+
+      - name: date
+        description: "Snapshot month date."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('hr_date_dim')
+              field: date
+
+      
+      - name: titlehistory_key
+        description: "Current title history surrogate key."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('title_history_dim')
+              field: titlehistory_key
+
+      - name: billable_hours
+        description: "Billable hours for the month."
+
+      - name: non_billable_hours
+        description: "Non-billable hours for the month."
+
+      - name: total_hours
+        description: "Total hours worked for the month."
+
+      - name: billable_hours_percentage
+        description: "Percentage of total hours that are billable (0–1)."

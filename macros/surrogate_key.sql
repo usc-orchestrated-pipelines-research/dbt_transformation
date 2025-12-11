@@ -1,4 +1,4 @@
--- {# Stable string formatter + hash for surrogate keys #}
+--{# Stable string formatter + hash for surrogate keys #}
 {% macro surrogate_key(columns) %}
     md5(
       {%- for col in columns -%}

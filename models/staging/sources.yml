@@ -1,0 +1,19 @@
+sources:
+  - name: Consulting_Source_Data
+    database: CONSULTING_FIRM_DB
+    schema: SOURCE_DATA
+    tables:
+      - name: Consultant
+      - name: Businessunit
+      - name: Client
+      - name: Deliverable
+      - name: ConsultantTitleHistory
+      - name: Title
+      - name: Project
+      - name: ProjectExpense
+      - name: ConsultantDeliverable
+      - name: Payroll
+      - name: ProjectBillingRate
+      - name: Non_Billable_Hours
+      - name: Indirect_Cost
+      - name: Client_Feedback_Initial

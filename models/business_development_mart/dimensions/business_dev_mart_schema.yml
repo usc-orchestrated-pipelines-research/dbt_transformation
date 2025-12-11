@@ -1,0 +1,114 @@
+version: 2
+
+models:
+
+  - name: business_dev_date_dimension
+    description: "Contains date-related attributes for Business Development reporting"
+    columns:
+      - name: date
+        description: "Calendar date"
+        tests:
+          - not_null
+          - unique
+
+      - name: year
+        description: "Year component of the date"
+        tests:
+          - not_null
+
+      - name: quarter
+        description: "Quarter of the year"
+        tests:
+          - not_null
+
+      - name: month
+        description: "Month number"
+        tests:
+          - not_null
+
+      - name: month_name
+        description: "Full month name"
+        tests:
+          - not_null
+
+      - name: day_name
+        description: "Full day name"
+        tests:
+          - not_null
+
+      - name: day_of_week
+        description: "Numeric day of week"
+        tests:
+          - not_null
+
+      - name: week
+        description: "Week number of the year"
+        tests:
+          - not_null
+
+      - name: is_weekend
+        description: "Flag indicating whether the day is Saturday or Sunday"
+        tests:
+          - not_null
+
+
+  - name: business_unit_dim
+    description: "Contains SCD Type-2 tracked Business Unit dimension data"
+    columns:
+      - name: business_unit_key
+        description: "Surrogate Business Unit Key"
+        tests:
+          - unique
+          - not_null
+
+      - name: unitid
+        description: "Natural Business Unit ID"
+        tests:
+          - not_null
+
+      - name: name
+        description: "Business unit name"
+        tests:
+          - not_null
+
+      - name: valid_from
+        description: "Record validity start timestamp"
+        tests:
+          - not_null
+
+      - name: valid_to
+        description: "Record validity end timestamp"
+
+
+  - name: client1_dim
+    description: "Contains SCD Type-2 tracked client information"
+    columns:
+      - name: client_key
+        description: "Surrogate Client Key"
+        tests:
+          - not_null
+          - unique
+
+      - name: client_id
+        description: "Natural Client ID"
+        tests:
+          - not_null
+
+      - name: client_name
+        description: "Client name"
+        tests:
+          - not_null
+
+      - name: phone_number
+        description: "Client phone number"
+
+      - name: email
+        description: "Client email address"
+
+      - name: valid_from
+        description: "Record validity start timestamp"
+        tests:
+          - not_null
+
+      - name: valid_to
+        description: "Record validity end timestamp"

@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: business_dev_fact
+    description: "Fact table summarizing revenue, forecast, and satisfaction metrics by client and month."
+
+    columns:
+
+      - name: client_feedback_key
+        description: "Surrogate primary key for the fact table."
+        tests:
+          - unique
+          - not_null
+
+      - name: client_key
+        description: "Foreign key to client dimension."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('client1_dim')
+              field: client_key
+
+      - name: business_unit_key
+        description: "Foreign key to business unit dimension."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('business_unit_dim')
+              field: business_unit_key
+
+      - name: date
+        description: "Snapshot month used for aggregations (FK to date dimension)."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('business_development_date_dim')
+              field: date
+
+      - name: revenue_received
+        description: "Revenue received from completed projects for the snapshot month."
+        tests:
+          - not_null
+          - testing_revenue_received
+          # - dbt_utils.expression_is_true:
+          #     expression: "{{ revenue_received }} >= 0"
+
+      - name: average_satisfaction
+        description: "Average client satisfaction score."
+        tests:
+          - not_null
+          # - dbt_utils.expression_is_true:
+          #     expression: "{{ avg_satisfaction }} >= 0"
+
+      - name: forecasted_future_revenue
+        description: "Forecasted future revenue for incomplete or ongoing projects."
+        tests:
+          - not null
+          # - dbt_utils.expression_is_true:
+          #     expression: "{{ forecasted_future_revenue }} >= 0"

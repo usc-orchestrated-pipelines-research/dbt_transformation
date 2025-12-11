@@ -101,9 +101,13 @@ models:
 
       - name: phone_number
         description: "Client phone number"
+        tests:
+          - Phone_Number_Business_Dev_Test
 
       - name: email
         description: "Client email address"
+        tests:
+          - Email_Business_Dev_Test
 
       - name: valid_from
         description: "Record validity start timestamp"
